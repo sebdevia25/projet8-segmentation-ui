@@ -35,8 +35,10 @@ if uploaded_file is not None:
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Image originale", use_column_width=True)
     
-    # Envoyer à l'API FastAPI
-    files = {"image": (uploaded_file.name, uploaded_file, uploaded_file.type)}
+    # Convertir l'image en bytes pour requests
+    uploaded_file.seek(0)  # remet le curseur au début
+    files = {"image": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)}
+    
     response = requests.post(FASTAPI_URL, files=files)
     
     if response.status_code == 200:
