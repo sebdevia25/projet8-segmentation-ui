@@ -19,7 +19,7 @@ PALETTE = [
 
 FASTAPI_URL = "https://Jabb-projet8-segmentation-api.hf.space/predict"
 
-st.title("Projet 8 - Segmentation d'images")
+st.title("Projet 8 - Segmentation d'images :)")
 
 uploaded_file = st.file_uploader("Choisir une image...", type=["jpg", "jpeg", "png"])
 
