@@ -58,6 +58,21 @@ def send_image_to_api(pil_img):
     )
     return response
 
+def compute_iou(mask_pred, mask_gt, num_classes=8):
+    """Calcule l'IoU moyen global entre le masque prédit et le masque ground truth."""
+    ious = []
+    for c in range(num_classes):
+        pred_c = (mask_pred == c)
+        gt_c = (mask_gt == c)
+        intersection = np.logical_and(pred_c, gt_c).sum()
+        union = np.logical_or(pred_c, gt_c).sum()
+        if union == 0:
+            continue  # ignorer les classes absentes
+        ious.append(intersection / union)
+    if len(ious) == 0:
+        return 0.0
+    return np.mean(ious)
+
 # =====================
 # UI
 # =====================
@@ -127,8 +142,12 @@ if image is not None:
 
         # Redimensionner exactement comme le masque prédit
         gt_mask_resized = gt_mask.resize(image.size, Image.NEAREST)
-
+         # Convertir en array pour calculer IoU
+        mask_pred_array = np.array(mask_img.resize(image.size, Image.NEAREST))
+        mask_gt_array = np.array(gt_mask_resized)
+        iou_score = compute_iou(mask_pred_array[:,:,0], mask_gt_array[:,:,0], NUM_CLASSES)
         # Afficher juste en dessous du masque prédit
         col_gt1, col_gt2, col_gt3 = st.columns(3)
       
         col_gt2.image(gt_mask.resize(image.size, Image.NEAREST), caption="Masque de référence", use_column_width=True)
+        col_gt2.metric(label="IoU global", value=f"{iou_score:.2f}"
