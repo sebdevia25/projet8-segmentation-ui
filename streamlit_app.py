@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 import numpy as np
 from PIL import Image
+import io
+import os
 
 # =====================
 # CONFIG
@@ -20,12 +22,14 @@ PALETTE = np.array([
     [70, 130, 180],    # sky
 ], dtype=np.uint8)
 
+BASE_DIR = os.path.dirname(__file__)
+
 SAMPLES = {
-    "Ville 1": ("samples/image_1.png", "samples/mask_1.png"),
-    "Ville 2": ("samples/image_2.png", "samples/mask_2.png"),
-    "Ville 3": ("samples/image_3.png", "samples/mask_3.png"),
-    "Ville 4": ("samples/image_4.png", "samples/mask_4.png"),
-    "Ville 5": ("samples/image_5.png", "samples/mask_5.png"),
+    "Ville 1": ("samples/image_1.jpg", "samples/mask_1.png"),
+    "Ville 2": ("samples/image_2.jpg", "samples/mask_2.png"),
+    "Ville 3": ("samples/image_3.jpg", "samples/mask_3.png"),
+    "Ville 4": ("samples/image_4.jpg", "samples/mask_4.png"),
+    "Ville 5": ("samples/image_5.jpg", "samples/mask_5.png"),
 }
 
 # =====================
@@ -39,14 +43,26 @@ def colorize_mask(mask):
     return out
 
 def overlay_image(image, mask, alpha=0.5):
-    """Superposition image + masque"""
     return Image.blend(image, mask, alpha)
+
+def send_image_to_api(pil_img):
+    """Encode correctement une image PIL et l'envoie à l'API"""
+    buf = io.BytesIO()
+    pil_img.save(buf, format="PNG")
+    buf.seek(0)
+
+    response = requests.post(
+        FASTAPI_URL,
+        files={"image": ("image.png", buf, "image/png")},
+        timeout=30
+    )
+    return response
 
 # =====================
 # UI
 # =====================
-st.set_page_config(page_title="Segmentation urbaine", layout="wide")
-st.title("Segmentation sémantique urbaine")
+st.set_page_config(page_title="Segmentation sémantique", layout="wide")
+st.title("Projet 8 — Segmentation sémantique urbaine")
 
 mode = st.radio(
     "Choisir une image",
@@ -62,15 +78,17 @@ gt_mask = None
 # IMAGE SOURCE
 # =====================
 if mode == "Uploader une image":
-    uploaded_file = st.file_uploader("Image (jpg / png)", type=["jpg", "jpeg", "png"])
-    gt_mask = None
+    uploaded_file = st.file_uploader("Image (JPG / PNG)", type=["jpg", "jpeg", "png"])
 
-    if uploaded_file:
+    if uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
 
-else:
+elif mode == "Utiliser une image de démonstration":
     sample_name = st.selectbox("Image de démonstration", list(SAMPLES.keys()))
     img_path, mask_path = SAMPLES[sample_name]
+
+    img_path = os.path.join(BASE_DIR, img_path)
+    mask_path = os.path.join(BASE_DIR, mask_path)
 
     image = Image.open(img_path).convert("RGB")
     gt_mask = Image.open(mask_path).convert("RGB")
@@ -83,14 +101,8 @@ if image is not None:
 
     col1.image(image, caption="Image originale", use_column_width=True)
 
-    # Appel API
-    img_bytes = image.copy()
-    buffer = img_bytes.tobytes()
-
-    response = requests.post(
-        FASTAPI_URL,
-        files={"image": ("image.png", image.tobytes(), "image/png")}
-    )
+    with st.spinner("Segmentation en cours..."):
+        response = send_image_to_api(image)
 
     if response.status_code != 200:
         st.error(f"Erreur API : {response.text}")
@@ -110,7 +122,7 @@ if image is not None:
     # =====================
     # GROUND TRUTH
     # =====================
-    if gt_mask:
+    if gt_mask is not None:
         st.subheader("Masque de référence (entraînement)")
         gt_mask = gt_mask.resize(image.size, Image.NEAREST)
         st.image(gt_mask, use_column_width=True)
