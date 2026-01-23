@@ -150,4 +150,4 @@ if image is not None:
         col_gt1, col_gt2, col_gt3 = st.columns(3)
       
         col_gt2.image(gt_mask.resize(image.size, Image.NEAREST), caption="Masque de référence", use_column_width=True)
-        col_gt2.metric(label="IoU global", value=f"{iou_score:.2f}")
+        col_gt3.metric(label="IoU global", value=f"{iou_score:.2f}")
