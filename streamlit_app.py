@@ -122,7 +122,11 @@ if image is not None:
     # =====================
     # GROUND TRUTH
     # =====================
-    if gt_mask is not None:
-        st.subheader("Masque de référence (entraînement)")
-        gt_mask = gt_mask.resize(image.size, Image.NEAREST)
-        st.image(gt_mask, use_column_width=True)
+ if gt_mask is not None:
+    st.subheader("Masque de référence (entraînement)")
+
+    # Redimensionner exactement comme le masque prédit
+    gt_mask_resized = gt_mask.resize(image.size, Image.NEAREST)
+
+    # Afficher juste en dessous du masque prédit
+    st.image(gt_mask_resized, caption="Masque de référence", use_column_width=True)
