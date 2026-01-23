@@ -123,7 +123,7 @@ if image is not None:
     # GROUND TRUTH
     # =====================
     if gt_mask is not None:
-        st.subheader("Masque de référence (entraînement)")
+        #st.subheader("Masque de référence (entraînement)")
 
         # Redimensionner exactement comme le masque prédit
         gt_mask_resized = gt_mask.resize(image.size, Image.NEAREST)
