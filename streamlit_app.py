@@ -129,6 +129,6 @@ if image is not None:
         gt_mask_resized = gt_mask.resize(image.size, Image.NEAREST)
 
         # Afficher juste en dessous du masque prédit
-        col_gt1, col_gt2 = st.columns(2)
-        #col_gt1.image(mask_img, caption="Masque prédit", use_column_width=True)
+        col_gt1, col_gt2, col_gt3 = st.columns(3)
+      
         col_gt2.image(gt_mask.resize(image.size, Image.NEAREST), caption="Masque de référence", use_column_width=True)
