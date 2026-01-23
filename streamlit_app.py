@@ -25,11 +25,11 @@ PALETTE = np.array([
 BASE_DIR = os.path.dirname(__file__)
 
 SAMPLES = {
-    "Ville 1": ("samples/image_1.jpg", "samples/mask_1.png"),
-    "Ville 2": ("samples/image_2.jpg", "samples/mask_2.png"),
-    "Ville 3": ("samples/image_3.jpg", "samples/mask_3.png"),
-    "Ville 4": ("samples/image_4.jpg", "samples/mask_4.png"),
-    "Ville 5": ("samples/image_5.jpg", "samples/mask_5.png"),
+    "Ville 1": ("samples/image_1.png", "samples/mask_1.png"),
+    "Ville 2": ("samples/image_2.png", "samples/mask_2.png"),
+    "Ville 3": ("samples/image_3.png", "samples/mask_3.png"),
+    "Ville 4": ("samples/image_4.png", "samples/mask_4.png"),
+    "Ville 5": ("samples/image_5.png", "samples/mask_5.png"),
 }
 
 # =====================
