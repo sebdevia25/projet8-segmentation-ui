@@ -6,7 +6,7 @@ import plotly.express as px
 import pandas as pd
 
 IMG_DIR = "images"
-EDA_DIR = "images/eda"
+EDA_DIR = "images/EDA"
 
 # -------------------------
 # IoU calculées
@@ -78,8 +78,7 @@ if "selected_label" not in st.session_state:
     st.session_state.selected_label = "All"
 
 st.title("Cityscapes Segmentation Comparison")
-st.write(os.listdir(IMG_DIR))
-st.write(os.listdir(EDA_DIR))
+
 tab1, tab2 = st.tabs(["EDA", "MODELS"])
 
 # =========================================================
