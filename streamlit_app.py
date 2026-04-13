@@ -358,10 +358,6 @@ with tab3:
 
     uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
-    st.header("Live inference (U-Net vs SegFormer)")
-
-    uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
-
     if uploaded_file:
 
         image_bytes = uploaded_file.read()
