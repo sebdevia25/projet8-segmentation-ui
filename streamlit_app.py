@@ -362,18 +362,31 @@ with tab3:
 
         image_bytes = uploaded_file.read()
 
-        st.image(image_bytes, caption="Original image", use_container_width=True)
+        col1, col2, col3 = st.columns(3)
+
+        # taille unique pour tout le monde
+        DISPLAY_WIDTH = 350
+
+        # =========================
+        # ORIGINAL
+        # =========================
+        with col1:
+            st.subheader("Original")
+
+            st.image(
+                image_bytes,
+                caption="Original image",
+                width=DISPLAY_WIDTH
+            )
 
         files = {
             "image": (uploaded_file.name, image_bytes, uploaded_file.type)
         }
 
-        col1, col2 = st.columns(2)
-
         # =========================
         # U-NET
         # =========================
-        with col1:
+        with col2:
             st.subheader("U-Net")
 
             try:
@@ -383,7 +396,12 @@ with tab3:
                     data = r.json()
 
                     mask = base64.b64decode(data["mask_base64"])
-                    st.image(mask, caption="U-Net prediction")
+
+                    st.image(
+                        mask,
+                        caption="U-Net prediction",
+                        width=DISPLAY_WIDTH
+                    )
                 else:
                     st.error(r.text)
 
@@ -393,7 +411,7 @@ with tab3:
         # =========================
         # SEGFORMER
         # =========================
-        with col2:
+        with col3:
             st.subheader("SegFormer B3")
 
             try:
@@ -403,10 +421,14 @@ with tab3:
                     data = r.json()
 
                     mask = base64.b64decode(data["mask_base64"])
-                    st.image(mask, caption="SegFormer prediction")
+
+                    st.image(
+                        mask,
+                        caption="SegFormer prediction",
+                        width=DISPLAY_WIDTH
+                    )
                 else:
                     st.error(r.text)
 
             except Exception as e:
                 st.error(f"SegFormer error: {e}")
-
