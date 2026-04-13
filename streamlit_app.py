@@ -83,7 +83,7 @@ st.markdown("""
 This dashboard allows exploration of the dataset and comparison of segmentation models.
 
 1. Use the **EDA tab** to explore semantic categories in the dataset.
-2. Use the **MODELS tab** to visually compare predictions and metrics.
+2. Use the **COMPARE tab** to visually compare predictions and metrics.
 """)
 
 if "selected_label" not in st.session_state:
@@ -91,7 +91,7 @@ if "selected_label" not in st.session_state:
 
 st.title("Cityscapes Segmentation Comparison")
 
-tab1, tab2, tab3 = st.tabs(["EDA", "COMPARAISON", "POC"])
+tab1, tab2, tab3 = st.tabs(["EDA", "COMPARE", "POC"])
 
 # =========================================================
 # EDA TAB
