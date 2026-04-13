@@ -4,9 +4,21 @@ import numpy as np
 import os
 import plotly.express as px
 import pandas as pd
+import requests
+import io
+import base64
+
 
 IMG_DIR = "images"
 EDA_DIR = "images/EDA"
+
+# =========================
+# API URLs
+# =========================
+FASTAPI_UNET_URL = "https://Jabb-projet8-segmentation-api.hf.space/predict"
+FASTAPI_SEGFORMER_URL = "https://Jabb-projet8-segmentation-api.hf.space/predict-segformer"
+
+
 
 # -------------------------
 # IoU calculées
@@ -335,3 +347,12 @@ with tab2:
                     f"<div style='text-align:center'>Pixels gagnés: {pixels}</div>",
                     unsafe_allow_html=True
                 )
+
+# =========================================================
+# 🔥 POC TAB
+# =========================================================
+with tab3:
+
+    st.header("Live inference (U-Net vs SegFormer)")
+
+    uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
