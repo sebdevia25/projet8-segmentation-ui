@@ -84,6 +84,7 @@ This dashboard allows exploration of the dataset and comparison of segmentation 
 
 1. Use the **EDA tab** to explore semantic categories in the dataset.
 2. Use the **COMPARE tab** to visually compare predictions and metrics.
+3. Use the **POC tab** to test live inferance.
 """)
 
 if "selected_label" not in st.session_state:
@@ -356,3 +357,60 @@ with tab3:
     st.header("Live inference (U-Net vs SegFormer)")
 
     uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
+
+    st.header("Live inference (U-Net vs SegFormer)")
+
+    uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
+
+    if uploaded_file:
+
+        image_bytes = uploaded_file.read()
+
+        st.image(image_bytes, caption="Original image", use_container_width=True)
+
+        files = {
+            "image": (uploaded_file.name, image_bytes, uploaded_file.type)
+        }
+
+        col1, col2 = st.columns(2)
+
+        # =========================
+        # U-NET
+        # =========================
+        with col1:
+            st.subheader("U-Net")
+
+            try:
+                r = requests.post(FASTAPI_UNET_URL, files=files)
+
+                if r.status_code == 200:
+                    data = r.json()
+
+                    mask = base64.b64decode(data["mask_base64"])
+                    st.image(mask, caption="U-Net prediction")
+                else:
+                    st.error(r.text)
+
+            except Exception as e:
+                st.error(f"U-Net error: {e}")
+
+        # =========================
+        # SEGFORMER
+        # =========================
+        with col2:
+            st.subheader("SegFormer B3")
+
+            try:
+                r = requests.post(FASTAPI_SEGFORMER_URL, files=files)
+
+                if r.status_code == 200:
+                    data = r.json()
+
+                    mask = base64.b64decode(data["mask_base64"])
+                    st.image(mask, caption="SegFormer prediction")
+                else:
+                    st.error(r.text)
+
+            except Exception as e:
+                st.error(f"SegFormer error: {e}")
+
