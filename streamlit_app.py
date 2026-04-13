@@ -411,7 +411,7 @@ with tab3:
         # =========================
         # SEGFORMER
         # =========================
-       with col3:
+        with col3:
             st.subheader("SegFormer B3")
         
             try:
