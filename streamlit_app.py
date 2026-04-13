@@ -412,29 +412,29 @@ with tab3:
         # SEGFORMER
         # =========================
        with col3:
-    st.subheader("SegFormer B3")
-
-    try:
-        r = requests.post(FASTAPI_SEGFORMER_URL, files=files)
-
-        if r.status_code == 200:
-            data = r.json()
-
-            # decode mask
-            mask_bytes = base64.b64decode(data["mask_base64"])
-            mask_img = Image.open(io.BytesIO(mask_bytes)).convert("RGB")
-
-            # resize vers image originale
-            orig_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-            mask_img = mask_img.resize(orig_img.size, Image.NEAREST)
-
-            st.image(
-                mask_img,
-                caption="SegFormer prediction",
-                width=DISPLAY_WIDTH
-            )
-        else:
-            st.error(r.text)
-
-    except Exception as e:
-        st.error(f"SegFormer error: {e}")
+        st.subheader("SegFormer B3")
+    
+        try:
+            r = requests.post(FASTAPI_SEGFORMER_URL, files=files)
+    
+            if r.status_code == 200:
+                data = r.json()
+    
+                # decode mask
+                mask_bytes = base64.b64decode(data["mask_base64"])
+                mask_img = Image.open(io.BytesIO(mask_bytes)).convert("RGB")
+    
+                # resize vers image originale
+                orig_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+                mask_img = mask_img.resize(orig_img.size, Image.NEAREST)
+    
+                st.image(
+                    mask_img,
+                    caption="SegFormer prediction",
+                    width=DISPLAY_WIDTH
+                )
+            else:
+                st.error(r.text)
+    
+        except Exception as e:
+            st.error(f"SegFormer error: {e}")
