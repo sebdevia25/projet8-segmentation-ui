@@ -91,7 +91,7 @@ if "selected_label" not in st.session_state:
 
 st.title("Cityscapes Segmentation Comparison")
 
-tab1, tab2 = st.tabs(["EDA", "MODELS"])
+tab1, tab2, tab3 = st.tabs(["EDA", "COMPARAISON", "POC"])
 
 # =========================================================
 # EDA TAB
